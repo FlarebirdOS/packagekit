@@ -4,7 +4,7 @@ pkgname=(
 )
 pkgbase=packagekit
 pkgver=1.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A system designed to make installation and updates of packages easier"
 arch=('x86_64')
 url="https://www.freedesktop.org/software/PackageKit/"
@@ -26,6 +26,13 @@ makedepends=(
 options=('!emptydirs')
 source=(git+ssh://git@github.com/PackageKit/PackageKit.git#tag=v${pkgver})
 sha256sums=(3a4674c2eb55b0bc9760bfbefdf0e6f6340cae72f4b20cd592d1396dc3086cde)
+
+prepare() {
+    cd PackageKit
+
+    # Backport pkcon get-update-detail segfault https://github.com/PackageKit/PackageKit/pull/907
+    git cherry-pick -n ca55974b867e3d52facd3a8ae485157bcfbcfc2b
+}
 
 build() {
     cd PackageKit
